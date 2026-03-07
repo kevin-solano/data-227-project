@@ -1,11 +1,10 @@
 import streamlit as st
-import altair as alt
 from utils.io import load_data
 
 ICE_atd, ICE_arrests, ICE_detentions, ICE_removals, ICE_ex_individuals, ICE_ex_flights = load_data()
 
 st.title("Data Dashboard")
-st.write("This dashboard highlights all data frame used with interactive features. \
+st.write("This dashboard highlights all data frames used with interactive features. \
          Simply find a data frame of interest, select a column and value to filter and explore!")
 st.header("• ICE Data")
 

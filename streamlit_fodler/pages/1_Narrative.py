@@ -1,5 +1,4 @@
 import streamlit as st
-import altair as alt
 
 st.title("How Does Law Enforcement Deal With Deportations Across Time?\n")
 st.write("With the rise of protests and news suggesting excessive force and unlawful arrests/deportations \
@@ -16,7 +15,7 @@ st.header("2) What is the enforcement pipeline?")
 st.write("Not all arrests lead to removal from the country, we plan to cross-check numbers to track how many \
          arrests have led to deportations over the years, and check if more deportations are ocurring than arrests.")
 
-st.header("3) History of alternatives to detention.")
+st.header("3) History of alternatives to detention (ATD).")
 st.write("Trackig the numbers on forms of non-custiodial supervision may show trends changing with more conservative \
          administrations.")
 
