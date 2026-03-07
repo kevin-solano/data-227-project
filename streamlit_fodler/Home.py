@@ -12,7 +12,8 @@ st.write("This project is intended to highlight trends from given deportation da
 st.write(
     "To explore this visual data story, please navigate it through the pages in the sidebar:\n"
     "- **Central Narrative**: We open with writen objectives and questions we hope to answer with our data.\n"
-    "- **Exploration**: We lay down the exploration steps done to understand the data and generate each visualization.\n"
+    "- **Data Dashboard**: Interactive Data Frame exploration.\n"
+    "- **Exploratory Analysis**: We lay down the exploration steps done to understand the data and generate each visualization.\n"
     "- **Visualizations**: Plots with result descriptions and discussions.\n"
     "- **Methodology**: We lay down some key details about our data and limitations to our analysis.\n"
 )
