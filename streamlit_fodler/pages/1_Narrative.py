@@ -7,7 +7,7 @@ st.write("With the rise of protests and news suggesting excessive force and unla
          answer questions about unlawful arrests/deportations or use of excessive force, but to show whether there are \
          changes between the years in arrests, deportations, enforcement, etc.")
 
-st.header("1) How Large is ICE enforcement activity?")
+st.header("1) How Large is ICE's enforcement activity?")
 st.write("ICE has many ways of enforcing immigration laws, from less invasive such as regular checkups over zoom \
          to deportations. We hope to quantify the number of each type of enforcement over the years.")
 
