@@ -11,9 +11,9 @@ st.write("This project is intended to highlight trends from given deportation da
          sources. Charts are made using Altair, deployment done using Streamlit.\n")
 st.write(
     "To explore this visual data story, please navigate it through the pages in the sidebar:\n"
-    "- **Central Narrative**: We open with writen objectives and questions we hope to answer with our data.\n"
+    "- **Narrative**: We open with writen objectives and questions we hope to answer with our data.\n"
     "- **Data Dashboard**: Interactive Data Frame exploration.\n"
-    "- **Exploratory Analysis**: We lay down the exploration steps done to understand the data and generate each visualization.\n"
-    "- **Visualizations**: Plots with result descriptions and discussions.\n"
-    "- **Methodology**: We lay down some key details about our data and limitations to our analysis.\n"
+    "- **Visualizations and Discussion**: Plots with result descriptions and discussions.\n"
+    "- **Conclusion**: Written compilation of what was learned in this project to complete the central narrative.\n"
+    "- **Methodology and Citations**: We lay down some key details about our data and limitations to our analysis. We also link all works used.\n"
 )
