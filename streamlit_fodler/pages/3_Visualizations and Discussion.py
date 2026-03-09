@@ -56,7 +56,12 @@ chart = (
     alt.Chart(long_df)
     .mark_bar()
     .encode(
-        x=alt.X("Fiscal Year:O", title="Fiscal Year"),
+        x=alt.X("Fiscal Year:O", 
+                axis=alt.Axis(
+                    title="Fiscal Year",
+                    labelAngle=0
+                )
+        ),
         y=alt.Y("Count:Q", title="Count"),
         color="Fiscal Year:O",
         tooltip=["Fiscal Year", "Enforcement_Type", "Count"]
@@ -79,3 +84,95 @@ st.write("With this information, we can deduce that there is an overall increasi
          There is a discrepancy between the overall numbers of enforcement tactics in 2025 and other years, this could \
          be due to a lack of data reporting, or simply because the dataset wasn't updated. This stops us from comparing \
          enforcement between administrations.")
+
+st.header("2) Enforcement Pipeline, Quantifying arrests that lead to detentions and ATD, and from detentions to removals and ATD.")
+
+st.write("Understanding how an individual moves through the enforcement pipeline is crucial in understanding how ICE \
+         sees the effectiveness of each method of enforcement. This of course is completely dependent on legislation \
+         but can also help determine how legislation has changed across the years, for example more removals point towards \
+         legislators believing harsher punishments are more effective.")
+st.write("Another important aspect to notice is that to fully track this statistic we would need individual data that can \
+         be traced across different tables. This is extremely sensitive data and should only be handled by responsible authorities. \
+         To account for this, we decided calculate ratios of for example the number of detentions from 2024-2025 and divide \
+         by the number of arrests from the first year. This will give a percentage estimate of arrests in the two \
+         years that led to detentions. The choice between two years is due to the fact that ceratin individuals may \
+         have been arrested or detained in one year but only processed in the next. The following graph shows a logical \
+         understanding of what the pipeline looks like.")
+
+graph = """
+digraph EnforcementPipeline {
+    rankdir=LR;
+
+    Arrests -> Detentions;
+    Arrests -> ATD;
+    Detentions -> Removals;
+    Detentions -> ATD;
+}
+"""
+
+col1, col2, col3 = st.columns([1, 2, 1])
+with col2:
+    st.graphviz_chart(graph)
+
+st.write("The visualization below shows the results of each edge in the graph. Note that the rates are all above 1 (not a \
+         true probability). We are trying to only compare previous year arrests with that year and next's possible outcomes. \
+         This still gives the reader an idea of how someone may move through the pipeline even without a true percentage.")
+
+combined = combined.sort_values("Fiscal Year")
+
+combined["Detentions_next"] = combined["Detentions"].shift(-1)
+combined["Removals_next"] = combined["Removals"].shift(-1)
+combined["ATD_next"] = combined["ATD"].shift(-1)
+
+combined["Arrest_to_Detention"] = (
+    (combined["Detentions"] + combined["Detentions_next"]) /
+    combined["Arrests"]
+)
+
+combined["Arrest_to_ATD"] = (
+    (combined["ATD"] + combined["ATD_next"]) /
+    combined["Arrests"]
+)
+
+combined["Detention_to_Removal"] = (
+    (combined["Removals"] + combined["Removals_next"]) /
+    combined["Detentions"]
+)
+
+combined["Detention_to_ATD"] = (
+    (combined["ATD"] + combined["ATD_next"]) /
+    combined["Detentions"]
+)
+
+pipeline = combined.iloc[1:-1]
+
+pipeline_melt = pipeline.melt(
+    id_vars="Fiscal Year",
+    value_vars=["Arrest_to_Detention", "Detention_to_Removal", "Arrest_to_ATD", "Detention_to_ATD"],
+    var_name="Stage",
+    value_name="Rate"
+)
+
+chart = alt.Chart(pipeline_melt).mark_line(point=True).encode(
+    x=alt.X(
+        "Fiscal Year:O",
+        axis=alt.Axis(
+            title="Fiscal Year Window",
+            labelExpr="datum.label + '–' + (parseInt(datum.label) + 1)",
+            labelAngle=0
+        )
+    ),
+    y="Rate:Q",
+    color="Stage:N",
+    tooltip=["Fiscal Year", "Stage", "Rate"]
+)
+
+st.altair_chart(chart, use_container_width=True)
+
+st.write("Note how the edges leading towards ATD are usually higher than the ones leading towards either \
+         detention or removal from the same source. This indicates that law enforcement and legislators tend to \
+         prefer alternative methods of enforcement rather than following the traditional pipeline of arrest -> \
+         detention -> removal.")
+st.write("Note also that there was a slight decrease towards ATD punishements and increase in detentions or removals \
+         between 2022-2023 and 2023-2024. We couldn't find any news relating to this change, but this could simply be due \
+         to more effective methods of detection which increased the number of arrests and detentions.")
