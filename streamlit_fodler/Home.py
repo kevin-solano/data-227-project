@@ -1,6 +1,7 @@
 import streamlit as st
 from PIL import Image
 
+
 st.set_page_config(page_title="Narrative Viz Tutorial", layout="wide")
 
 st.title("DATA 22700 Final Project: Following Deportation trends from 2025-2026 in the U.S.")
