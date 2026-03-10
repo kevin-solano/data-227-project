@@ -1,28 +1,54 @@
 import streamlit as st
 
 st.title("How Does Law Enforcement Deal With Deportations Across Time?\n")
-st.write("With the rise of protests and news suggesting excessive force and unlawful arrests/deportations \
-         surrounding ICE in the new administration, we decided to explore the data provided by ICE and find trends and \
-         changes across recent years by answering questions and drawing a larger narrative with them. We are not here to \
-         answer questions about unlawful arrests/deportations or use of excessive force, but to show whether there are \
-         changes between the years in arrests, deportations, enforcement, etc.")
+st.write("With the rise of protests and news suggesting excessive force \
+    and unlawful arrests/deportations \
+    surrounding ICE in the new administration, we decided to explore the \
+    data provided by ICE and find trends and \
+    changes across recent years by answering questions and drawing a larger \
+    narrative with them. We are not here to \
+    answer questions about unlawful arrests/deportations or use of excessive force, \
+    but to show whether there are \
+    changes between the years in arrests, deportations, enforcement, etc.")
 
 st.header("1) How Large is ICE's enforcement activity?")
-st.write("ICE has many ways of enforcing immigration laws, from less invasive such as regular checkups over zoom \
-         to deportations. We hope to quantify the number of each type of enforcement over the years.")
+st.write("ICE has many ways of enforcing immigration laws, \
+    from less invasive such as regular checkups over zoom \
+    to deportations. We hope to quantify the number of each \
+    type of enforcement over the years.")
 
 st.header("2) What is the enforcement pipeline?")
-st.write("Not all arrests lead to removal from the country, we plan to cross-check numbers to track how many \
-         arrests have led to deportations over the years, and check if more deportations are ocurring than arrests.")
+graph = """
+digraph EnforcementPipeline {
+    rankdir=LR;
+    size = "25,15";
+
+    Arrests -> Detentions;
+    Arrests -> ATD;
+    Detentions -> Removals;
+    Detentions -> ATD;}
+"""
+col1, col2, col3 = st.columns([1, 4, 1])
+with col2:
+    st.graphviz_chart(graph)
+st.write("Not all arrests lead to removal from the country, \
+    we plan to cross-check numbers to track how many \
+    arrests have led to deportations over the years, and check \
+    if more deportations are ocurring than arrests.")
 
 st.header("3) History of alternatives to detention (ATD).")
-st.write("Trackig the numbers on forms of non-custiodial supervision may show trends changing with more conservative \
-         administrations.")
+st.write("Trackig the numbers on forms of non-custiodial supervision \
+    may show trends changing with more conservative \
+    administrations.")
 
-st.header("4) Impact of Title 42.")
-st.write("Title 42 is an order that allows for removal without following the formal deportation process. Tracking \
-         statistics relating to this order is crucial for understanding social issues in the U.S.")
+st.header("4) The impact of Title 42.")
+st.write("Title 42 is an order that allows for removal \
+    without following the formal deportation process. Tracking \
+    statistics relating to this order is crucial for \
+    understanding social issues in the U.S.")
 
 st.header("5) Do different countries experience different enforcement outcomes?")
-st.write("Some countries may have a larger number of deportations while others have more cases of other alternatives \
-         to detention. Tracking this can highlight any sort of favoritism toward certain countries.")
+st.write("Some countries may have a larger number of deportations \
+    while others have more cases of other alternatives \
+    to detention. Tracking this can highlight any sort of \
+    favoritism toward certain countries.")
