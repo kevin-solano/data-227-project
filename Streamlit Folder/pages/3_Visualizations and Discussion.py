@@ -3,8 +3,9 @@ import altair as alt
 import pandas as pd
 from shapely.geometry import shape
 from utils.io import load_data
+import json
 
-ICE_atd, ICE_arrests, ICE_detentions, ICE_removals, ICE_ex_individuals, ICE_ex_flights, ICE_arrest_25, ICE_arrest_26, USA_Map, USA_df = load_data()
+ICE_atd, ICE_arrests, ICE_detentions, ICE_removals, ICE_ex_individuals, ICE_ex_flights, ICE_arrest_25, ICE_arrest_26, USA_df, USA_Map = load_data()
 
 st.header("1) Quantifying ICE activity Across Fiscal Years.")
 st.write("To visualize this, we first compiled the different tables from the ICE data into one, where each row is a Fiscal Year \
@@ -179,135 +180,180 @@ st.write("Note also that there was a slight decrease towards ATD punishements an
          between 2022-2023 and 2023-2024. We couldn't find any news relating to this change, but this could simply be due \
          to more effective methods of detection which increased the number of arrests and detentions.")
 
-ICE_arrest_26['Male Non-Crim'] = [int(n.replace(',', '')) for n in ICE_arrest_26['Male Non-Crim']]
-ICE_arrest_26['Male Non-Crim'] = ICE_arrest_26['Male Non-Crim'].astype(int)
-ICE_arrest_26['Male Crim'] = ICE_arrest_26['Male Crim'].astype(int)
-ICE_arrest_26['Men'] = ICE_arrest_26['Male Crim'] + ICE_arrest_26['Male Non-Crim']
 
-ICE_arrest_26['Female Crim'] = ICE_arrest_26['Female Crim'].astype(int)
-ICE_arrest_26['Female Non-Crim'] = ICE_arrest_26['Female Non-Crim'].astype(int)
-ICE_arrest_26['Women'] = ICE_arrest_26['Female Crim'] + ICE_arrest_26['Female Non-Crim']
+# ---------------------------
+# Generate fresh arrest tables
+# ---------------------------
+def clean_numeric(series):
+    return (
+        series.astype(str)
+        .str.replace(",", "", regex=False)
+        .str.strip()
+        .replace({"nan": None, "": None})
+        .astype(float)
+        .fillna(0)
+        .astype(int)
+    )
 
-state_totals26 = (
-    ICE_arrest_26.groupby('State')[['Men', 'Women']]
-      .sum()
-      .reset_index()
-)
+for df in [ICE_arrest_25, ICE_arrest_26]:
+    df["Male Non-Crim"] = clean_numeric(df["Male Non-Crim"])
+    df["Male Crim"] = clean_numeric(df["Male Crim"])
+    df["Female Non-Crim"] = clean_numeric(df["Female Non-Crim"])
+    df["Female Crim"] = clean_numeric(df["Female Crim"])
 
-ICE_arrest_25['Male Non-Crim'] = [int(n.replace(',', '')) for n in ICE_arrest_25['Male Non-Crim']]
-ICE_arrest_25['Male Non-Crim'] = ICE_arrest_25['Male Non-Crim'].astype(int)
-ICE_arrest_25['Male Crim'] = ICE_arrest_25['Male Crim'].astype(int)
-ICE_arrest_25['Men'] = ICE_arrest_25['Male Crim'] + ICE_arrest_25['Male Non-Crim']
+    df["Men"] = df["Male Crim"] + df["Male Non-Crim"]
+    df["Women"] = df["Female Crim"] + df["Female Non-Crim"]
 
-ICE_arrest_25['Female Crim'] = ICE_arrest_25['Female Crim'].astype(int)
-ICE_arrest_25['Female Non-Crim'] = ICE_arrest_25['Female Non-Crim'].astype(int)
-ICE_arrest_25['Women'] = ICE_arrest_25['Female Crim'] + ICE_arrest_25['Female Non-Crim']
-
-state_totals25 = (
-    ICE_arrest_25.groupby('State')[['Men', 'Women']]
-      .sum()
-      .reset_index()
-)
+state_totals25 = ICE_arrest_25.groupby("State")[["Men", "Women"]].sum().reset_index()
+state_totals26 = ICE_arrest_26.groupby("State")[["Men", "Women"]].sum().reset_index()
 
 state_debrev = {
-    "AL": "Alabama",
-    "AK": "Alaska",
-    "AZ": "Arizona",
-    "AR": "Arkansas",
-    "CA": "California",
-    "CO": "Colorado",
-    "CT": "Connecticut",
-    "DE": "Delaware",
-    "FL": "Florida",
-    "GA": "Georgia",
-    "HI": "Hawaii",
-    "ID": "Idaho",
-    "IL": "Illinois",
-    "IN": "Indiana",
-    "IA": "Iowa",
-    "KS": "Kansas",
-    "KY": "Kentucky",
-    "LA": "Louisiana",
-    "ME": "Maine",
-    "MD": "Maryland",
-    "MA": "Massachusetts",
-    "MI": "Michigan",
-    "MN": "Minnesota",
-    "MS": "Mississippi",
-    "MO": "Missouri",
-    "MT": "Montana",
-    "NE": "Nebraska",
-    "NV": "Nevada",
-    "NH": "New Hampshire",
-    "NJ": "New Jersey",
-    "NM": "New Mexico",
-    "NY": "New York",
-    "NC": "North Carolina",
-    "ND": "North Dakota",
-    "OH": "Ohio",
-    "OK": "Oklahoma",
-    "OR": "Oregon",
-    "PA": "Pennsylvania",
-    "RI": "Rhode Island",
-    "SC": "South Carolina",
-    "SD": "South Dakota",
-    "TN": "Tennessee",
-    "TX": "Texas",
-    "UT": "Utah",
-    "VT": "Vermont",
-    "VA": "Virginia",
-    "WA": "Washington",
-    "WV": "West Virginia",
-    "WI": "Wisconsin",
-    "WY": "Wyoming"
+    "AL": "Alabama", "AK": "Alaska", "AZ": "Arizona", "AR": "Arkansas",
+    "CA": "California", "CO": "Colorado", "CT": "Connecticut", "DE": "Delaware",
+    "FL": "Florida", "GA": "Georgia", "HI": "Hawaii", "ID": "Idaho",
+    "IL": "Illinois", "IN": "Indiana", "IA": "Iowa", "KS": "Kansas",
+    "KY": "Kentucky", "LA": "Louisiana", "ME": "Maine", "MD": "Maryland",
+    "MA": "Massachusetts", "MI": "Michigan", "MN": "Minnesota", "MS": "Mississippi",
+    "MO": "Missouri", "MT": "Montana", "NE": "Nebraska", "NV": "Nevada",
+    "NH": "New Hampshire", "NJ": "New Jersey", "NM": "New Mexico", "NY": "New York",
+    "NC": "North Carolina", "ND": "North Dakota", "OH": "Ohio", "OK": "Oklahoma",
+    "OR": "Oregon", "PA": "Pennsylvania", "RI": "Rhode Island", "SC": "South Carolina",
+    "SD": "South Dakota", "TN": "Tennessee", "TX": "Texas", "UT": "Utah",
+    "VT": "Vermont", "VA": "Virginia", "WA": "Washington", "WV": "West Virginia",
+    "WI": "Wisconsin", "WY": "Wyoming"
 }
 
-state_totals25['State Name'] = state_totals25['State'].map(state_debrev)
+state_totals25["State Name"] = state_totals25["State"].map(state_debrev)
+state_totals26["State Name"] = state_totals26["State"].map(state_debrev)
 
-state_totals26['State Name'] = state_totals26['State'].map(state_debrev)
+# FIPS ids required for us-10m TopoJSON state map
+state_fips = {
+    "Alabama": 1, "Alaska": 2, "Arizona": 4, "Arkansas": 5, "California": 6,
+    "Colorado": 8, "Connecticut": 9, "Delaware": 10, "District of Columbia": 11,
+    "Florida": 12, "Georgia": 13, "Hawaii": 15, "Idaho": 16, "Illinois": 17,
+    "Indiana": 18, "Iowa": 19, "Kansas": 20, "Kentucky": 21, "Louisiana": 22,
+    "Maine": 23, "Maryland": 24, "Massachusetts": 25, "Michigan": 26,
+    "Minnesota": 27, "Mississippi": 28, "Missouri": 29, "Montana": 30,
+    "Nebraska": 31, "Nevada": 32, "New Hampshire": 33, "New Jersey": 34,
+    "New Mexico": 35, "New York": 36, "North Carolina": 37, "North Dakota": 38,
+    "Ohio": 39, "Oklahoma": 40, "Oregon": 41, "Pennsylvania": 42,
+    "Rhode Island": 44, "South Carolina": 45, "South Dakota": 46,
+    "Tennessee": 47, "Texas": 48, "Utah": 49, "Vermont": 50, "Virginia": 51,
+    "Washington": 53, "West Virginia": 54, "Wisconsin": 55, "Wyoming": 56
+}
 
+#converts the state names in the dataframe into the same key (id) used by the map (topojson)
+state_totals25["id"] = state_totals25["State Name"].map(state_fips)
+state_totals26["id"] = state_totals26["State Name"].map(state_fips)
+
+# Drop unmapped rows to avoid missing data
+state_totals25 = state_totals25.dropna(subset=["id"]).copy()
+state_totals25["id"] = state_totals25["id"].astype(int)
+
+state_totals26 = state_totals26.dropna(subset=["id"]).copy()
+state_totals26["id"] = state_totals26["id"].astype(int)
+# ---------------------------
+# State choropleths
+# ---------------------------
+st.header("3) State-level arrests by gender")
+
+#this is the main change ---> Bypasses PyArrow Serialization
+us_map = alt.topo_feature(
+    "https://vega.github.io/vega-datasets/data/us-10m.json",
+    feature="states"
+)
 
 selection = alt.selection_point(fields=['State Name'], empty = 'none')
 
-all_states = pd.DataFrame({
-    'State Name': [f['properties']['NAME'] for f in USA_Map['features']]
-})
-state_totals25_full = all_states.merge(state_totals25, on='State Name', how='left')
-
-ICE_detention_W25 = alt.Chart(alt.Data(values=USA_Map['features'])
-).mark_geoshape(
-    stroke='white',
-    strokeWidth=0.5
-).transform_lookup(
-    lookup='properties.NAME',  # column in GeoJSON
-    from_= alt.LookupData(state_totals25_full, key='State Name', fields=['Women'])
-).encode(  
-    color = alt.Color('Women:Q', scale=alt.Scale(scheme='blues'),
-                title = 'Total'), 
-    tooltip=['properties.NAME:N', 'Women:Q'],
-).project(
-    type='albersUsa'
-).properties(
-    width=400
+ICE_detention_W25 = (
+    alt.Chart(us_map)
+    .mark_geoshape(stroke="white", strokeWidth=0.5)
+    .transform_lookup(
+        lookup="id",
+        #lookup by id and then use the state name
+        from_=alt.LookupData(state_totals25, key="id", fields=["State Name", "Women"])
+    ).encode(
+        color=alt.Color("Women:Q", scale=alt.Scale(scheme="blues"), title="Women"),
+        tooltip=["State Name:N", alt.Tooltip("Women:Q", format=",")],
+        opacity = alt.condition(selection, alt.value(1), alt.value(0.3))
+    ).add_params(
+        selection
+    ).project(
+        type="albersUsa"
+    ).properties(
+        width=400, height=250, title="Women detained by ICE 2025"
+    )
 )
 
-ICE_detention_M25  = alt.Chart(
-    USA_df,
-    title="Men detained by ICE 2025").mark_geoshape(  
-    stroke='#706545', 
-    strokeWidth=0.75
-).transform_lookup(
-    lookup='State Name',
-    from_=alt.LookupData(state_totals25_full, key= 'State Name', 
-        fields=['Men'])
-).encode(
-    color = alt.Color('Men:Q', scale=alt.Scale(scheme='reds'),
-                title = 'Total')
-).add_params(
-    selection
-).properties(
-    width=400
+ICE_detention_M25 = (
+    alt.Chart(us_map)
+    .mark_geoshape(stroke="white", strokeWidth=0.5)
+    .transform_lookup(
+        lookup="id",
+        #lookup by id and then use the state name
+        from_=alt.LookupData(state_totals25, key="id", fields=["State Name", "Men"])
+    ).encode(
+        color=alt.Color("Men:Q", scale=alt.Scale(scheme="reds"), title="Men"),
+        tooltip=["State Name:N", alt.Tooltip("Men:Q", format=",")],
+        opacity = alt.condition(selection, alt.value(1), alt.value(0.3))
+    ).add_params(
+        selection
+    ).project(
+        type="albersUsa"
+    ).properties(
+        width=400, height=250, title="Men detained by ICE 2025"
+    )
 )
 
-ICE_detention_25 = (ICE_detention_W25 | ICE_detention_M25).resolve_scale(color='independent')
-st.altair_chart(ICE_detention_W25, use_container_width=True) 
+ICE_detention_W26 = (
+    alt.Chart(us_map)
+    .mark_geoshape(stroke="white", strokeWidth=0.5)
+    .transform_lookup(
+        lookup="id",
+        #lookup by id and then use the state name
+        from_=alt.LookupData(state_totals26, key="id", fields=["State Name", "Women"])
+    )
+    .encode(
+        color=alt.Color("Women:Q", scale=alt.Scale(scheme="blues"), title="Men"),
+        tooltip=["State Name:N", alt.Tooltip("Women:Q", format=",")],
+        opacity = alt.condition(selection, alt.value(1), alt.value(0.3))
+    ).add_params(
+        selection
+    )
+    .project(type="albersUsa")
+    .properties(width=400, height=250, title="Women detained by ICE 2026")
+)
+
+ICE_detention_M26 = (
+    alt.Chart(us_map)
+    .mark_geoshape(stroke="white", strokeWidth=0.5)
+    .transform_lookup(
+        lookup="id",
+        #lookup by id and then use the state name
+        from_=alt.LookupData(state_totals26, key="id", fields=["State Name", "Men"])
+    )
+    .encode(
+        color=alt.Color("Men:Q", scale=alt.Scale(scheme="reds"), title="Men"),
+        tooltip=["State Name:N", alt.Tooltip("Men:Q", format=",")],
+        opacity = alt.condition(selection, alt.value(1), alt.value(0.3))
+    ).add_params(
+        selection
+    ).project(
+        type="albersUsa"
+    ).properties(
+        width=400, height=250, title="Men detained by ICE 2026"
+    )
+)
+
+ICE_detention_25 = (ICE_detention_W25 | ICE_detention_M25).resolve_scale(color="independent")
+ICE_detention_26 = (ICE_detention_W26 | ICE_detention_M26).resolve_scale(color="independent")
+
+detention_dashboard = alt.vconcat(
+    ICE_detention_26,
+    ICE_detention_25
+).resolve_scale(
+    color='shared'
+)
+
+st.altair_chart(ICE_detention_25, use_container_width=True)
+st.altair_chart(ICE_detention_26, use_container_width=True)
