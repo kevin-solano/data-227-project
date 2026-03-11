@@ -346,7 +346,7 @@ ICE_detention_M26 = (
 ICE_detention_25 = (ICE_detention_W25 | ICE_detention_M25).resolve_scale(color="independent")
 ICE_detention_26 = (ICE_detention_W26 | ICE_detention_M26).resolve_scale(color="independent")
 
-st.write("Click on a state to compare accross the maps. Hover with your mouse to see the number of arrests in each state.")
+st.write("Click on a state to compare accross the maps. Hover with your mouse to see the number of arrests in each state. Notice that 2026 data is available but it does not reflect the entire year. This is the most up to date ICE arrest data from US government website.")
 st.altair_chart(ICE_detention_25, use_container_width=True)
 st.altair_chart(ICE_detention_26, use_container_width=True)
 
