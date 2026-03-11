@@ -25,8 +25,14 @@ st.write("Most people in the pipeline are first arrested and usually led to some
 
 
 
-st.header("3) What does the history of alternatives to detention look like ?")
-st.write("Using s.")
+st.header("3) Where in the country is ICE most active, how is this changing and how does it vary for Men versus Women?")
+st.write("The most impactful statistic shown by this map is the increase in Ice Detentions from 2025 to 2026 in practically every state accross both men and women.\
+         This change is even more alarming when you realize that we are still not even halfway through 2026.\
+         Notice as well that the scales for both men and women are increased by over 1.5 times in 2026 comopared to 2025.\
+         Though we have seen a general increase in ICE activity over the last 6 years, this jump is particularly massive, and particularly difficult to analyze.\
+         There was only one reliable data set with information from 2026 and underreporting is almost certainly occurring. Notice that Illinois is not included in any of the four maps, yet I know people personally who were detained by ICE in Illinois.\
+         These likely do not classify as arrests, or ICE officers are not obligated to report stops unless they book someone.\
+         In any event, this is certainly an under-estimate of ICE activity yet it still shows such a massive increase in just one year.")
 
 
 st.header("4) What nationalities are targeted most by ICE? How has this changed in recent years?")

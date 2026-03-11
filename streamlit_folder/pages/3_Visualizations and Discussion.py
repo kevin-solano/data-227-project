@@ -312,7 +312,7 @@ ICE_detention_W26 = (
         from_=alt.LookupData(state_totals26, key="id", fields=["State Name", "Women"])
     )
     .encode(
-        color=alt.Color("Women:Q", scale=alt.Scale(scheme="blues"), title="Men"),
+        color=alt.Color("Women:Q", scale=alt.Scale(scheme="blues"), title="Women"),
         tooltip=["State Name:N", alt.Tooltip("Women:Q", format=",")],
         opacity = alt.condition(selection, alt.value(1), alt.value(0.3))
     ).add_params(
