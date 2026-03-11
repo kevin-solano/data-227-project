@@ -67,9 +67,9 @@ st.write("Between March 2020 and May 2023, the enforcement pipelin was significa
     statistics relating to this order is crucial for \
     understanding social issues in the U.S.")
 
-st.header("5) Do different countries experience different enforcement outcomes?")
-st.write("Enforcement trends are not always uniform, they vary significantly by country of citizenship. \
-    Some countries may have a larger number of deportations \
-    while others have more cases of other alternatives \
-    to detention. Visualizing thesse outcomes geographically can demonstrate \
-    any disproportionately higher rates of detention or removal across different nationalities.")
+st.header("5) What nationalities are targeted most by ICE? How has this changed in recent years?")
+st.write("Enforcement trends are not uniform, they vary significantly by country of citizenship. \
+    Some nationalities see a much larger number of deportations than others. \
+    The countries that see larger deportations also change significantly over the course of just a few years.\
+    Visualizing thesse outcomes geographically can demonstrate how these trends change over time and show which  \
+    countries have the highest rates of detention or removal across different nationalities.")

@@ -3,7 +3,7 @@ import altair as alt
 #from shapely.geometry import shape
 from utils.io import load_data
 
-ICE_atd, ICE_arrests, ICE_detentions, ICE_removals, ICE_ex_individuals, ICE_ex_flights, ICE_arrest_25, ICE_arrest_26, ICE_Countries = load_data()
+ICE_atd, ICE_arrests, ICE_detentions, ICE_removals, ICE_ex_individuals, ICE_ex_flights, ICE_Countries, ICE_arrest_25, ICE_arrest_26 = load_data()
 
 st.header("1) Quantifying ICE activity Across Fiscal Years.")
 st.write("To visualize this, we first compiled the different tables from the ICE data into one, where each row is a Fiscal Year \
@@ -346,7 +346,7 @@ ICE_detention_M26 = (
 ICE_detention_25 = (ICE_detention_W25 | ICE_detention_M25).resolve_scale(color="independent")
 ICE_detention_26 = (ICE_detention_W26 | ICE_detention_M26).resolve_scale(color="independent")
 
-st.write("Click on a state to compare accross the maps. Hover with your mouse to see the number of arrests in each state.")
+st.write("Click on a state to compare accross the maps. Hover with your mouse to see the number of arrests in each state. Notice that 2026 data is available but it does not reflect the entire year. This is the most up to date ICE arrest data from US government website.")
 st.altair_chart(ICE_detention_25, use_container_width=True)
 st.altair_chart(ICE_detention_26, use_container_width=True)
 
