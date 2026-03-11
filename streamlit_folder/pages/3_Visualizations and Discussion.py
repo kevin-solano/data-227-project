@@ -1,11 +1,9 @@
 import streamlit as st
 import altair as alt
-import pandas as pd
 from shapely.geometry import shape
 from utils.io import load_data
-import json
 
-ICE_atd, ICE_arrests, ICE_detentions, ICE_removals, ICE_ex_individuals, ICE_ex_flights, ICE_arrest_25, ICE_arrest_26, USA_df, USA_Map = load_data()
+ICE_atd, ICE_arrests, ICE_detentions, ICE_removals, ICE_ex_individuals, ICE_ex_flights, ICE_arrest_25, ICE_arrest_26, ICE_Countries = load_data()
 
 st.header("1) Quantifying ICE activity Across Fiscal Years.")
 st.write("To visualize this, we first compiled the different tables from the ICE data into one, where each row is a Fiscal Year \
@@ -348,12 +346,187 @@ ICE_detention_M26 = (
 ICE_detention_25 = (ICE_detention_W25 | ICE_detention_M25).resolve_scale(color="independent")
 ICE_detention_26 = (ICE_detention_W26 | ICE_detention_M26).resolve_scale(color="independent")
 
-detention_dashboard = alt.vconcat(
-    ICE_detention_26,
-    ICE_detention_25
-).resolve_scale(
-    color='shared'
-)
-
+st.write("Click on a state to compare accross the maps. Hover with your mouse to see the number of arrests in each state.")
 st.altair_chart(ICE_detention_25, use_container_width=True)
 st.altair_chart(ICE_detention_26, use_container_width=True)
+
+st.write("This graphic contains a lot of useful information we can parse. Firstly, we can see which states had the most ICE arrests in 2025 and compare this to 2026.\
+         There are several states where ICE made arrests in 2026 that it did not in 2025 for example. Another interesting piece is the comparison between Men and Women. \
+         The detaining of men is orders of magnitude larger than the detaining of women in the same states. We can wonder whether this proportional to the undocumented population or more indicative of men's higher likelihood to be arrested at all.")
+
+world_map = alt.topo_feature(
+    "https://raw.githubusercontent.com/vega/vega/refs/heads/main/docs/data/world-110m.json",
+    feature="countries"
+)
+
+country_iso = {
+    "INDIA": 356,
+    "CHINA": 156,
+    "UNITED STATES": 840,
+    "INDONESIA": 360,
+    "PAKISTAN": 586,
+    "NIGERIA": 566,
+    "BRAZIL": 76,
+    "BANGLADESH": 50,
+    "RUSSIA": 643,
+    "MEXICO": 484,
+    "JAPAN": 392,
+    "ETHIOPIA": 231,
+    "PHILIPPINES": 608,
+    "EGYPT": 818,
+    "VIETNAM": 704,
+    "DR CONGO": 180,
+    "TURKEY": 792,
+    "IRAN": 364,
+    "GERMANY": 276,
+    "THAILAND": 764,
+    "UNITED KINGDOM": 826,
+    "FRANCE": 250,
+    "ITALY": 380,
+    "TANZANIA": 834,
+    "SOUTH AFRICA": 710,
+    "MYANMAR": 104,
+    "KENYA": 404,
+    "SOUTH KOREA": 410,
+    "COLOMBIA": 170,
+    "SPAIN": 724,
+    "UGANDA": 800,
+    "ARGENTINA": 32,
+    "ALGERIA": 12,
+    "SUDAN": 729,
+    "UKRAINE": 804,
+    "IRAQ": 368,
+    "AFGHANISTAN": 4,
+    "POLAND": 616,
+    "CANADA": 124,
+    "MOROCCO": 504,
+    "SAUDI ARABIA": 682,
+    "UZBEKISTAN": 860,
+    "PERU": 604,
+    "MALAYSIA": 458,
+    "ANGOLA": 24,
+    "GHANA": 288,
+    "MOZAMBIQUE": 508,
+    "YEMEN": 887,
+    "NEPAL": 524,
+    "VENEZUELA": 862,
+    "GUATEMALA": 320,
+    "BELIZE": 84,
+    "EL SALVADOR": 222,
+    "HONDURAS": 340,
+    "NICARAGUA": 558,
+    "COSTA RICA": 188,
+    "PANAMA": 591,
+    "CUBA": 192,
+    "HAITI": 332,
+    "DOMINICAN REPUBLIC": 214,
+    "BOLIVIA": 68,
+    "CHILE": 152,
+    "ECUADOR": 218,
+    "GUYANA": 328,
+    "PARAGUAY": 600,
+    "SURINAME": 740,
+    "URUGUAY": 858,
+    "SOMALIA": 706,
+    "CAMEROON": 120,
+}
+
+#converts the country names in the dataframe into the same key (id) used by the map (topojson)
+ICE_Countries["id"] = ICE_Countries["Country of Citizenship"].map(country_iso)
+
+# Drop unmapped rows to avoid missing data
+ICE_Countries = ICE_Countries.dropna(subset=["id"]).copy()
+ICE_Countries["id"] = ICE_Countries["id"].astype(int)
+
+ICE_Countries_24 = ICE_Countries[ICE_Countries['Fiscal Year'] == 2024]
+ICE_Origins_24 = (ICE_Countries_24.groupby('Country of Citizenship')['Removals'].sum().reset_index())
+
+ICE_Countries_23 = ICE_Countries[ICE_Countries['Fiscal Year'] == 2023]
+ICE_Origins_23 = (ICE_Countries_23.groupby('Country of Citizenship')['Removals'].sum().reset_index())
+
+ICE_Countries_22 = ICE_Countries[ICE_Countries['Fiscal Year'] == 2022]
+ICE_Origins_22 = (ICE_Countries_22.groupby('Country of Citizenship')['Removals'].sum().reset_index())
+
+ICE_Countries_21 = ICE_Countries[ICE_Countries['Fiscal Year'] == 2021]
+ICE_Origins_21 = (ICE_Countries_21.groupby('Country of Citizenship')['Removals'].sum().reset_index())
+
+
+ICE_world_24= (
+    alt.Chart(world_map)
+    .mark_geoshape(stroke="white", strokeWidth=0.5)
+    .transform_lookup(
+        lookup="id",
+        #lookup by id and then use the state name
+        from_=alt.LookupData(ICE_Countries_24, key="id", fields=["Country of Citizenship", "Removals"])
+    )
+    .encode(
+        color=alt.Color("Removals:Q", scale=alt.Scale(scheme="reds"), title="Men"),
+        tooltip=["Country of Citizenship:N", alt.Tooltip("Removals:Q", format=",")],
+    ).project(
+        type="mercator"
+    ).properties(
+        width=400, height=250, title="Deportees by Country of Origin 2024"
+    )
+)
+
+ICE_world_23 = (
+    alt.Chart(world_map)
+    .mark_geoshape(stroke="white", strokeWidth=0.5)
+    .transform_lookup(
+        lookup="id",
+        #lookup by id and then use the state name
+        from_=alt.LookupData(ICE_Countries_23, key="id", fields=["Country of Citizenship", "Removals"])
+    )
+    .encode(
+        color=alt.Color("Removals:Q", scale=alt.Scale(scheme="reds"), title="Men"),
+        tooltip=["Country of Citizenship:N", alt.Tooltip("Removals:Q", format=",")],
+    ).project(
+        type="mercator"
+    ).properties(
+        width=400, height=250, title="Deportees by Country of Origin 2023"
+    )
+)
+
+ICE_world_22 = (
+    alt.Chart(world_map)
+    .mark_geoshape(stroke="white", strokeWidth=0.5)
+    .transform_lookup(
+        lookup="id",
+        #lookup by id and then use the state name
+        from_=alt.LookupData(ICE_Countries_22, key="id", fields=["Country of Citizenship", "Removals"])
+    )
+    .encode(
+        color=alt.Color("Removals:Q", scale=alt.Scale(scheme="reds"), title="Men"),
+        tooltip=["Country of Citizenship:N", alt.Tooltip("Removals:Q", format=",")],
+    ).project(
+        type="mercator"
+    ).properties(
+        width=400, height=250, title="Deportees by Country of Origin 2022"
+    )
+)
+
+ICE_world_21 = (
+    alt.Chart(world_map)
+    .mark_geoshape(stroke="white", strokeWidth=0.5)
+    .transform_lookup(
+        lookup="id",
+        #lookup by id and then use the state name
+        from_=alt.LookupData(ICE_Countries_21, key="id", fields=["Country of Citizenship", "Removals"])
+    )
+    .encode(
+        color=alt.Color("Removals:Q", scale=alt.Scale(scheme="reds"), title="Men"),
+        tooltip=["Country of Citizenship:N", alt.Tooltip("Removals:Q", format=",")],
+    ).project(
+        type="mercator"
+    ).properties(
+        width=400, height=250, title="Deportees by Country of Origin 2021"
+    )
+)
+st.header("4) Deportations by Deportee Country of Origin 2021-24")
+st.altair_chart((ICE_world_24 |ICE_world_23), use_container_width=True)
+st.altair_chart((ICE_world_22 | ICE_world_21), use_container_width=True)
+
+st.write("We can see some interesting patterns here though we should be careful about drawing conclusions. Notice the inclusion of Russia in 2023/24 but not in 2021/22. \
+         There is also many countries in Western Asia that are included in 2024 that are not included in any other year. \
+         Another interesting feature of this chart is nthe most commonly deported nationality by ICE each year. Many Central \
+         American countries feature as we might expect but India is the most common in 2023 which is suprising. This graphic shows many interesting details that could motivate future study.")
