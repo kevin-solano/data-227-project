@@ -29,11 +29,11 @@ st.header("3) What does the history of alternatives to detention look like ?")
 st.write("Using s.")
 
 
-
-st.header("4) The impact of Title 42?")
-st.write("Using section 1 hasn't been fully reported yet.")
-
-
-
-st.header("5) Do different countries experience different enforcement outcomes?")
-st.write("Using ss of any type of enforcement, but 2025 hasn't been fully reported yet.")
+st.header("4) What nationalities are targeted most by ICE? How has this changed in recent years?")
+st.write("While the counts per country was overall low, there were interesting trends from 2021-2022 to 2023-2024. \
+         As time passed, there was a larger number of countries receiving deportees. There were also very unexpected \
+         countries with deportees such as Russia and some other Eastern European countries. There was also a noticeable \
+         spike in the number of deportees from India from 2023 to 2024. Moreover, there were no deportees going to India \
+         in 2021, and a small number in 2022. An unexpected trend showed regarding Mexico, a country with expected high \
+         deportation rates, showed a larger number of deportees from there in 2021, but then it rapidly decrease in the \
+         following years.")
