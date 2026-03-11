@@ -3,7 +3,7 @@ import altair as alt
 #from shapely.geometry import shape
 from utils.io import load_data
 
-ICE_atd, ICE_arrests, ICE_detentions, ICE_removals, ICE_ex_individuals, ICE_ex_flights, ICE_arrest_25, ICE_arrest_26, ICE_Countries = load_data()
+ICE_atd, ICE_arrests, ICE_detentions, ICE_removals, ICE_ex_individuals, ICE_ex_flights, ICE_Countries, ICE_arrest_25, ICE_arrest_26 = load_data()
 
 st.header("1) Quantifying ICE activity Across Fiscal Years.")
 st.write("To visualize this, we first compiled the different tables from the ICE data into one, where each row is a Fiscal Year \
