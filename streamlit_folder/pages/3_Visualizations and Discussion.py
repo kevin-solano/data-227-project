@@ -460,7 +460,7 @@ ICE_world_24= (
         from_=alt.LookupData(ICE_Countries_24, key="id", fields=["Country of Citizenship", "Removals"])
     )
     .encode(
-        color=alt.Color("Removals:Q", scale=alt.Scale(scheme="reds"), title="Men"),
+        color=alt.Color("Removals:Q", scale=alt.Scale(scheme="reds"), title="Count"),
         tooltip=["Country of Citizenship:N", alt.Tooltip("Removals:Q", format=",")],
     ).project(
         type="mercator"
@@ -478,7 +478,7 @@ ICE_world_23 = (
         from_=alt.LookupData(ICE_Countries_23, key="id", fields=["Country of Citizenship", "Removals"])
     )
     .encode(
-        color=alt.Color("Removals:Q", scale=alt.Scale(scheme="reds"), title="Men"),
+        color=alt.Color("Removals:Q", scale=alt.Scale(scheme="reds"), title="Count"),
         tooltip=["Country of Citizenship:N", alt.Tooltip("Removals:Q", format=",")],
     ).project(
         type="mercator"
@@ -496,7 +496,7 @@ ICE_world_22 = (
         from_=alt.LookupData(ICE_Countries_22, key="id", fields=["Country of Citizenship", "Removals"])
     )
     .encode(
-        color=alt.Color("Removals:Q", scale=alt.Scale(scheme="reds"), title="Men"),
+        color=alt.Color("Removals:Q", scale=alt.Scale(scheme="reds"), title="Count"),
         tooltip=["Country of Citizenship:N", alt.Tooltip("Removals:Q", format=",")],
     ).project(
         type="mercator"
@@ -514,7 +514,7 @@ ICE_world_21 = (
         from_=alt.LookupData(ICE_Countries_21, key="id", fields=["Country of Citizenship", "Removals"])
     )
     .encode(
-        color=alt.Color("Removals:Q", scale=alt.Scale(scheme="reds"), title="Men"),
+        color=alt.Color("Removals:Q", scale=alt.Scale(scheme="reds"), title="Count"),
         tooltip=["Country of Citizenship:N", alt.Tooltip("Removals:Q", format=",")],
     ).project(
         type="mercator"

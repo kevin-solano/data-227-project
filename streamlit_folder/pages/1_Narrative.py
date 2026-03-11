@@ -49,27 +49,18 @@ st.write("The enforcement pipeline is the 'Immigration Lifecycle' \
     the number deportations vs the number of arrests.")
 
 
-st.header("3) History of alternatives to detention (ATD).")
-st.write("In cases where physical detention is deemed unnecessary, ICE uses the \
-    Alternatives to Detention program (ATD). \
-    ATD has evolved to use various technologies to monitor participants remaining \
-    in the country. This includes GPS ankle monitoring, telephone reporting via voice \
-    recognition, and facial matching technology. As of December 2024, the program has \
-    over 187,000 active participants. Tracking the forms of supervision \
-    may show trends changing with more conservative administrations.")
+st.header("3) What states have the highest ICE Detainment rates? How do these rates vary for Men versus Women?")
+st.write("States with higher detention rates can point to many things. \
+    It can point to a larger population of undocumented people but it can also point to a lack of regulation on ICE and law enforcement in those states. \
+    There is also a story of overall increase in ICE activity in the US in recent years. \
+    Some states which saw no ICE activity now do, and there is no evidence of an increase in undocumented in recent years. \
+    We will compare ICE Detentions across US states in 2025 and 2026, seperating by sex to see if any interesting patterns arise. \
+    Though some states may be hotspots for both sexes, we see an extroardinary difference in male and female arrest counts in pretty much every state.\
+    This could be due to a higher proportion of undocumented persons in the US are men, or simply that men tend to get arrested more than women (which is consistent with general arrest statistics)")
 
-st.header("4) The impact of Title 42.")
-st.write("Between March 2020 and May 2023, the enforcement pipelin was significanlty \
-    altetered by __Title 42 authority__. Unlike Title 8, Title 42 was a public health \
-    authority guided by the CDC that allowed for a quicker explusion of undocumented immigrants \
-    to prevent the spread of disease, an order that allows for removal \
-    without following the formal deportation process. Tracking \
-    statistics relating to this order is crucial for \
-    understanding social issues in the U.S.")
-
-st.header("5) What nationalities are targeted most by ICE? How has this changed in recent years?")
+st.header("4) What nationalities are targeted most by ICE? How has this changed in recent years?")
 st.write("Enforcement trends are not uniform, they vary significantly by country of citizenship. \
     Some nationalities see a much larger number of deportations than others. \
     The countries that see larger deportations also change significantly over the course of just a few years.\
-    Visualizing thesse outcomes geographically can demonstrate how these trends change over time and show which  \
-    countries have the highest rates of detention or removal across different nationalities.")
+    Visualizing these outcomes geographically can demonstrate how these trends change over time and show which  \
+    nationalities have the highest rates of detention or removal.")
