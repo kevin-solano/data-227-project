@@ -27,17 +27,15 @@ st.write("The scale of ICE's Enforcement and Removal Operations (ERO) is massive
 st.header("2) What is the enforcement pipeline?")
 graph = """
 digraph EnforcementPipeline {
-    rankdir=LR;
-    size="25,15";
-    
-    graph [pad="0.5", nodesep="1", ranksep="1.5", ratio=fill];
-    node [shape=box style="rounded,filled" fontname="Helvetica" fontsize=26 margin="0.25,0.15"];
-    edge [fontname="Helvetica" fontsize=52 penwidth=2];
+    rankdir=LR;    
+    graph [ratio=fill];
+    node [style="filled" fontname="Times New Roman" size=50];
+    edge [fontname="Times New Roman" fontsize=30];
 
     Arrests [label="Identification & Arrest", fillcolor="#ffcccb"];
     Detention [label="Civil Immigration Detention", fillcolor="#ffd966"];
     ATD [label="Alternatives to Detention (ATD)\nGPS • Facial Match • Phone Check-ins", fillcolor="#cfe2f3"];
-    Removal [label="Removal / Expulsion\nTitle 8 or Title 42", fillcolor="#d9ead3"];
+    Removal [label="Removal / Expulsion\nTitle 8 or Title 42", fillcolor="#cfe2f3"];
 
     Arrests -> Detention [label="Custody Determination"];
     Arrests -> ATD [label="Low Flight Risk"];
@@ -46,9 +44,7 @@ digraph EnforcementPipeline {
     Detention -> ATD [label="Release to Monitoring"];
 }
 """
-col1, col2, col3 = st.columns([0.5,6,0.5])
-with col2:
-    st.graphviz_chart(graph, use_container_width=True)
+st.graphviz_chart(graph, width="stretch", height=900)
 st.write("The enforcement pipeline is the 'Immigration Lifecycle' \
     managed by ERO, encompassing identification, arrest, detention, and removal. \
     Following arrest, officials make custody determinations on an individual basis \
