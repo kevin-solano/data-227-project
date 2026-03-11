@@ -1,7 +1,7 @@
 import streamlit as st
 from utils.io import load_data
 
-ICE_atd, ICE_arrests, ICE_detentions, ICE_removals, ICE_ex_individuals, ICE_ex_flights, ICE_arrest_25, ICE_arrest_26, ICE_Countries = load_data()
+ICE_atd, ICE_arrests, ICE_detentions, ICE_removals, ICE_ex_individuals, ICE_ex_flights, ICE_Countries, ICE_arrest_25, ICE_arrest_26 = load_data()
 
 st.title("Data Dashboard")
 st.write("This dashboard highlights all data frames used with interactive features. \
@@ -81,3 +81,39 @@ value_6 = st.selectbox(
 )
 filtered_flights_df = ICE_ex_flights[ICE_ex_flights[column_6] == value_6]
 st.dataframe(filtered_flights_df)
+
+st.subheader("- ICE Country of Origin Data")
+
+column_7 = st.selectbox("Choose a column to filter", ICE_Countries.columns, key="countries_col")
+value_7 = st.selectbox(
+    "Choose a value",
+    ICE_Countries[column_7].dropna().unique(),
+    key="countries"
+)
+
+filtered_countries = ICE_Countries[ICE_Countries[column_7] == value_7]
+st.dataframe(filtered_countries)
+
+st.subheader("- ICE 2025 Facility Counts by State")
+
+column_8 = st.selectbox("Choose a column to filter", ICE_arrest_25.columns, key="25_col")
+value_8 = st.selectbox(
+    "Choose a value",
+    ICE_arrest_25[column_8].dropna().unique(),
+    key="25"
+)
+
+filtered_25 = ICE_arrest_25[ICE_arrest_25[column_8] == value_8]
+st.dataframe(filtered_25)
+
+st.subheader("- ICE 2026 Facility COunts by State")
+
+column_9 = st.selectbox("Choose a column to filter", ICE_arrest_26.columns, key="26_col")
+value_9 = st.selectbox(
+    "Choose a value",
+    ICE_arrest_26[column_9].dropna().unique(),
+    key="26"
+)
+
+filtered_26 = ICE_arrest_26[ICE_arrest_26[column_9] == value_9]
+st.dataframe(filtered_26)

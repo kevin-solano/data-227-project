@@ -13,4 +13,4 @@ def load_data():
     ICE_arrest_25 = pd.read_csv("data/ICE25.csv", encoding= "latin-1")
     ICE_arrest_26 = pd.read_csv("data/ICE26(sheet1).csv", encoding= "latin-1")
     ICE_Countries = pd.read_csv("data/ICE_data(ICE Removals).csv", encoding = "latin-1")
-    return ICE_atd, ICE_arrests, ICE_detentions, ICE_removals, ICE_ex_individuals, ICE_ex_flights, ICE_arrest_25, ICE_arrest_26, ICE_Countries 
+    return ICE_atd, ICE_arrests, ICE_detentions, ICE_removals, ICE_ex_individuals, ICE_ex_flights, ICE_Countries, ICE_arrest_25, ICE_arrest_26 
