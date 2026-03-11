@@ -1,6 +1,6 @@
 import streamlit as st
 import altair as alt
-from shapely.geometry import shape
+#from shapely.geometry import shape
 from utils.io import load_data
 
 ICE_atd, ICE_arrests, ICE_detentions, ICE_removals, ICE_ex_individuals, ICE_ex_flights, ICE_arrest_25, ICE_arrest_26, ICE_Countries = load_data()
