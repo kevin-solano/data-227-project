@@ -1,36 +1,20 @@
 import streamlit as st
 
 st.title("Conclusions")
-st.write("Each block of text here is a summary of the larger discussion findings from the visualizations page \
-         keeping the scope of the questions from the narrative, think of this page as a conclusion roping everything \
-         together.")
+st.write("A summary of the findings from our visualizations page keeping \
+    with the scope of the questions from the narrative, think of this page as a conclusion roping everything \
+    together.")
 
 
 
 st.header("1) How Large is ICE's enforcement activity?")
-st.write("Using section 1 from the visualizations page, We notice an overall increasing trend in eforcement activity \
+st.write("From the ICE activity section, we notice an overall increasing trend in eforcement activity \
          with emphasis on alternative ways of detention (GPS monitoring, phonecall checkups, etc) [1]. This increasing \
          trend peaked in 2023 with 22277 cases of any type of enforcement, but 2025 hasn't been fully reported yet.")
 
 
 
 st.header("2) What is the enforcement pipeline?")
-
-graph = """
-digraph EnforcementPipeline {
-    rankdir=LR;
-    size = "25,15";
-
-    Arrests -> Detentions;
-    Arrests -> ATD;
-    Detentions -> Removals;
-    Detentions -> ATD;
-}
-"""
-
-col1, col2, col3 = st.columns([1, 4, 1])
-with col2:
-    st.graphviz_chart(graph)
 
 st.write("While the data isn't granular enough to track individuals, we can create estimates from the number of arrests, \
          detentions, removals, and ATDs across time amd track how an individual may go through the enforcement pipeline.")

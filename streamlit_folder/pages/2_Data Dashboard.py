@@ -1,11 +1,7 @@
 import streamlit as st
 from utils.io import load_data
 
-<<<<<<< HEAD:streamlit_fodler/pages/2_Data Dashboard.py
 ICE_atd, ICE_arrests, ICE_detentions, ICE_removals, ICE_ex_individuals, ICE_ex_flights, ICE_arrest_25, ICE_arrest_26, USA_df, USA_Map = load_data()
-=======
-ICE_atd, ICE_arrests, ICE_detentions, ICE_removals, ICE_ex_individuals, ICE_ex_flights, ICE_arrest_25, ICE_arrest_26, USA_Map, USA_df = load_data()
->>>>>>> 5582cc7b8ba3c6ca9c06f8f028e35210f7e0712e:Streamlit Folder/pages/2_Data Dashboard.py
 
 st.title("Data Dashboard")
 st.write("This dashboard highlights all data frames used with interactive features. \
